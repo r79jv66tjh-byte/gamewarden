@@ -1,0 +1,5 @@
+{
+  "name": "GameWarden",
+  "entry": "GameWarden.pyw",
+  "pyinstaller": []
+}
