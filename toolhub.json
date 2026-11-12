@@ -1,0 +1,317 @@
+{
+  "name": "GameWarden",
+  "description": "Steam-/Epic-Spielebibliothek analysieren (Platz, zuletzt gespielt, Deinstallations-Vorschläge), Spiele zwischen Laufwerken verschieben, Screenshots nach Spiel sortieren, Controller-Profile umschalten.",
+  "category": "Spiele & Mods",
+  "commands": [
+    {
+      "name": "games",
+      "description": "Installierte Steam- und Epic-Spiele mit Größe, Laufwerk, zuletzt gespielt, Spielzeit und Deinstallations-Hinweis.",
+      "run": [
+        "python",
+        "cli.py",
+        "games",
+        "--json"
+      ],
+      "args": [
+        {
+          "name": "sort",
+          "flag": "--sort",
+          "type": "string",
+          "required": false,
+          "description": "Sortierung: size (Standard), name, last, playtime, drive",
+          "enum": [
+            "size",
+            "name",
+            "last",
+            "playtime",
+            "drive"
+          ]
+        },
+        {
+          "name": "platform",
+          "flag": "--platform",
+          "type": "string",
+          "required": false,
+          "description": "Nur steam oder epic",
+          "enum": [
+            "steam",
+            "epic"
+          ]
+        },
+        {
+          "name": "filter",
+          "flag": "--filter",
+          "type": "string",
+          "required": false,
+          "description": "Teil des Spielnamens oder der AppID"
+        },
+        {
+          "name": "drive",
+          "flag": "--drive",
+          "type": "string",
+          "required": false,
+          "description": "Nur Spiele auf diesem Laufwerk, z. B. D"
+        },
+        {
+          "name": "limit",
+          "flag": "--limit",
+          "type": "integer",
+          "required": false,
+          "description": "Höchstens so viele Spiele ausgeben"
+        },
+        {
+          "name": "days",
+          "flag": "--days",
+          "type": "integer",
+          "required": false,
+          "description": "Tage ohne Spielen für den Hinweis (Standard 365)"
+        },
+        {
+          "name": "min_gb",
+          "flag": "--min-gb",
+          "type": "number",
+          "required": false,
+          "description": "Hinweis nur für Spiele ab dieser Größe in GB"
+        }
+      ],
+      "readonly": true
+    },
+    {
+      "name": "drives",
+      "description": "Pro Laufwerk: Anzahl Spiele, belegter Platz durch Spiele, freier Platz.",
+      "run": [
+        "python",
+        "cli.py",
+        "drives",
+        "--json"
+      ],
+      "args": [],
+      "readonly": true
+    },
+    {
+      "name": "suggestions",
+      "description": "Deinstallations-Kandidaten: lange nicht gespielte (und optional große) Steam-Spiele, mit freiwerdendem Platz.",
+      "run": [
+        "python",
+        "cli.py",
+        "suggestions",
+        "--json"
+      ],
+      "args": [
+        {
+          "name": "days",
+          "flag": "--days",
+          "type": "integer",
+          "required": false,
+          "description": "Mindestens so viele Tage nicht gespielt (Standard 365)"
+        },
+        {
+          "name": "min_gb",
+          "flag": "--min-gb",
+          "type": "number",
+          "required": false,
+          "description": "Nur Spiele ab dieser Größe in GB"
+        },
+        {
+          "name": "limit",
+          "flag": "--limit",
+          "type": "integer",
+          "required": false,
+          "description": "Höchstens so viele Spiele ausgeben"
+        }
+      ],
+      "readonly": true
+    },
+    {
+      "name": "libraries",
+      "description": "Steam-Bibliotheksordner und Epic-Installationsordner mit freiem Platz; zeigt auch, ob Steam/Epic gerade läuft. Mögliche Ziele für move-game.",
+      "run": [
+        "python",
+        "cli.py",
+        "libraries",
+        "--json"
+      ],
+      "args": [],
+      "readonly": true
+    },
+    {
+      "name": "screenshots",
+      "description": "Screenshots aus Steam, NVIDIA, Xbox Game Bar und eigenen Ordnern, nach Spiel gezählt.",
+      "run": [
+        "python",
+        "cli.py",
+        "screenshots",
+        "--json"
+      ],
+      "args": [
+        {
+          "name": "folder",
+          "flag": "--folder",
+          "type": "string",
+          "required": false,
+          "description": "Zusätzlicher Ordner zum Durchsuchen"
+        },
+        {
+          "name": "videos",
+          "flag": "--videos",
+          "type": "boolean",
+          "required": false,
+          "description": "Auch Videos (mp4/mkv/webm) einbeziehen"
+        },
+        {
+          "name": "details",
+          "flag": "--details",
+          "type": "boolean",
+          "required": false,
+          "description": "Dateipfade pro Spiel mit ausgeben"
+        }
+      ],
+      "readonly": true,
+      "timeout": 300
+    },
+    {
+      "name": "profiles",
+      "description": "Gespeicherte Controller-/Tastenbelegungs-Profile: Spiel, exe, Dateien, Varianten, Auto-Umschaltung.",
+      "run": [
+        "python",
+        "cli.py",
+        "profiles",
+        "--json"
+      ],
+      "args": [],
+      "readonly": true
+    },
+    {
+      "name": "move-game",
+      "description": "Steam- oder Epic-Spiel ohne Neu-Download auf ein anderes Laufwerk verschieben (Platzprüfung, Rollback). Steam/Epic müssen geschlossen sein. Immer zuerst mit dry_run prüfen.",
+      "run": [
+        "python",
+        "cli.py",
+        "move-game",
+        "--json"
+      ],
+      "args": [
+        {
+          "name": "game",
+          "flag": "--game",
+          "type": "string",
+          "required": true,
+          "description": "Spiel: key (z. B. Steam:730), AppID, Name oder eindeutiger Namensteil"
+        },
+        {
+          "name": "target",
+          "flag": "--target",
+          "type": "string",
+          "required": true,
+          "description": "Steam: vorhandene Zielbibliothek (siehe libraries); Epic: Zielordner"
+        },
+        {
+          "name": "dry_run",
+          "flag": "--dry-run",
+          "type": "boolean",
+          "required": false,
+          "description": "Nur Vorschau als JSON, nichts verändern"
+        }
+      ],
+      "readonly": false,
+      "timeout": 7200
+    },
+    {
+      "name": "sort-screenshots",
+      "description": "Screenshots nach <Ziel>\\<Spiel>\\ kopieren (oder verschieben). Steam-Screenshots werden nur kopiert. Rollback bei Fehlern.",
+      "run": [
+        "python",
+        "cli.py",
+        "sort-screenshots",
+        "--json"
+      ],
+      "args": [
+        {
+          "name": "target",
+          "flag": "--target",
+          "type": "string",
+          "required": false,
+          "description": "Zielordner (Standard: eingestelltes Ziel bzw. Bilder\\Spiele-Screenshots)"
+        },
+        {
+          "name": "move",
+          "flag": "--move",
+          "type": "boolean",
+          "required": false,
+          "description": "Verschieben statt kopieren"
+        },
+        {
+          "name": "game",
+          "flag": "--game",
+          "type": "string",
+          "required": false,
+          "description": "Nur Screenshots dieses Spiels (Name wie in screenshots)"
+        },
+        {
+          "name": "folder",
+          "flag": "--folder",
+          "type": "string",
+          "required": false,
+          "description": "Zusätzlicher Quellordner"
+        },
+        {
+          "name": "videos",
+          "flag": "--videos",
+          "type": "boolean",
+          "required": false,
+          "description": "Auch Videos einbeziehen"
+        },
+        {
+          "name": "limit",
+          "flag": "--limit",
+          "type": "integer",
+          "required": false,
+          "description": "Höchstens so viele Einträge in der Ausgabeliste"
+        },
+        {
+          "name": "dry_run",
+          "flag": "--dry-run",
+          "type": "boolean",
+          "required": false,
+          "description": "Nur Vorschau als JSON, nichts verändern"
+        }
+      ],
+      "readonly": false,
+      "timeout": 900
+    },
+    {
+      "name": "activate-profile",
+      "description": "Gespeicherte Profil-Variante eines Spiels aktivieren (überschreibt die Konfigurationsdateien, vorheriger Stand wird gesichert).",
+      "run": [
+        "python",
+        "cli.py",
+        "activate-profile",
+        "--json"
+      ],
+      "args": [
+        {
+          "name": "game",
+          "flag": "--game",
+          "type": "string",
+          "required": true,
+          "description": "Spielname des Profils (siehe profiles)"
+        },
+        {
+          "name": "variant",
+          "flag": "--variant",
+          "type": "string",
+          "required": true,
+          "description": "Name der Variante (siehe profiles)"
+        },
+        {
+          "name": "dry_run",
+          "flag": "--dry-run",
+          "type": "boolean",
+          "required": false,
+          "description": "Nur zeigen, welche Dateien überschrieben würden"
+        }
+      ],
+      "readonly": false
+    }
+  ]
+}
