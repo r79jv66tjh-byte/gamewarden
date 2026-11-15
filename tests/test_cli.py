@@ -174,7 +174,7 @@ class CliTest(unittest.TestCase):
         games = {g["game"]: g["count"] for g in d["games"]}
         self.assertEqual(games, {"Testspiel": 1, "Hytale": 1, "Unbekannt": 1})
 
-    # -------------------------------------------------------------- schreibend (bestätigt)
+    # -------------------------------------------------------------- writing commands, confirmed
     def test_move_game_confirmed(self):
         with mock.patch.object(mover, "running_processes", return_value=set()):
             code, out, err = self.run_inproc(["move-game", "--game", "Steam:100", "--target", str(self.fs.lib2)])

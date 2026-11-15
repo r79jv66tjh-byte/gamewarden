@@ -162,18 +162,6 @@ class SteamInstall:
                 result.append(g)
         return result
 
-    def app_names(self) -> dict[str, str]:
-        """AppID -> Name für alle installierten Spiele (für Screenshots)."""
-        names = {}
-        for lib in self.libraries():
-            for acf in (lib / "steamapps").glob("appmanifest_*.acf"):
-                try:
-                    st = vdf.get_ci(vdf.load(acf), "AppState", {})
-                    names[str(st.get("appid"))] = st.get("name", "")
-                except (OSError, vdf.VdfError):
-                    pass
-        return names
-
 
 # ------------------------------------------------------------------ Epic
 def epic_games(manifest_dir: Path | None = None) -> list[Game]:

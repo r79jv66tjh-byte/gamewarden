@@ -273,7 +273,7 @@ class _Copier:
 
 
 def _rmtree(p: Path):
-    def onerr(func, path, exc):
+    def onerr(func, path, _exc):
         os.chmod(path, 0o666)
         func(path)
     if p.is_dir():
