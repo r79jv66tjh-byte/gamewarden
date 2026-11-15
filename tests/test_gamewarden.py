@@ -326,7 +326,6 @@ class ProfileTest(unittest.TestCase):
         self.cfg1.write_text("NEU1", encoding="utf-8")
         self.cfg2.write_text("NEU2", encoding="utf-8")
         real = profiles.shutil.copy2
-        n = {"i": 0}
 
         def flaky(a, b):
             if Path(b) == self.cfg2 and "Controller" in str(a):
